@@ -68,4 +68,14 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+// Public endpoint to get all products
+router.get('/', async (req, res) => {
+  try {
+    const products = await Product.find().populate('client', 'name email');
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 module.exports = router; 

@@ -27,7 +27,7 @@ function ClientLogin() {
 
   return (
     <div className="auth-container" style={{ textAlign: 'center' }}>
-      <h2>Client Login</h2>
+      <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="email"

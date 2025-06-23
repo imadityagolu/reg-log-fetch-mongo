@@ -7,6 +7,7 @@ function Register() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [mobile, setMobile] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -17,7 +18,7 @@ function Register() {
       const res = await fetch('http://localhost:5000/api/admit/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, mobile }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Registration failed');
@@ -45,6 +46,14 @@ function Register() {
           placeholder="Enter Your Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <br></br><br></br>
+        <input
+          type="text"
+          placeholder="Enter Your Mobile Number"
+          value={mobile}
+          onChange={(e) => setMobile(e.target.value)}
           required
         />
         <br></br><br></br>

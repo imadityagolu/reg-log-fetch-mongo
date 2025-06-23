@@ -10,11 +10,19 @@ import AdmitProtectedRoute from './components/admit/ProtectedRoute';
 import ClientProtectedRoute from './components/client/ProtectedRoute';
 import EditClient from './components/admit/EditClient';
 import AddProduct from './components/client/AddProduct';
+import AllProducts from './components/allproducts/AllProducts';
+import UserLogin from './components/users/Login';
+import UserRegister from './components/users/Register';
+import UserDashboard from './components/users/Dashboard';
+import UserProtectedRoute from './components/users/ProtectedRoute';
+import PlaceOrder from './components/users/PlaceOrder';
+import Cart from './components/users/Cart';
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<AllProducts />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={
@@ -39,6 +47,15 @@ function App() {
             <AddProduct />
           </ClientProtectedRoute>
         } />
+        <Route path="/user/login" element={<UserLogin />} />
+        <Route path="/user/register" element={<UserRegister />} />
+        <Route path="/user/dashboard" element={
+          <UserProtectedRoute>
+            <UserDashboard />
+          </UserProtectedRoute>
+        } />
+        <Route path="/user/placeorder" element={<PlaceOrder />} />
+        <Route path="/user/cart" element={<Cart />} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>

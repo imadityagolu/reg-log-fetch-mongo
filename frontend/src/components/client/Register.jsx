@@ -7,6 +7,7 @@ function ClientRegister() {
   const [password, setPassword] = useState('');
   const [dob, setDob] = useState('');
   const [address, setAddress] = useState('');
+  const [mobile, setMobile] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ function ClientRegister() {
       const res = await fetch('http://localhost:5000/api/client/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, dob, address }),
+        body: JSON.stringify({ name, email, password, dob, address, mobile }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Registration failed');
@@ -47,6 +48,14 @@ function ClientRegister() {
           placeholder="Enter Your Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <br></br><br></br>
+        <input
+          type="text"
+          placeholder="Enter Your Mobile Number"
+          value={mobile}
+          onChange={(e) => setMobile(e.target.value)}
           required
         />
         <br></br><br></br>
