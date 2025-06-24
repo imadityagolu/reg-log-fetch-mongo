@@ -12,6 +12,7 @@ function ProductDetails() {
   const [wishlistProductIds, setWishlistProductIds] = useState([]);
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
+  const backendUrl = "http://localhost:5000";
 
   useEffect(() => {
     setLoading(true);
@@ -151,8 +152,16 @@ function ProductDetails() {
     <>
       <Header />
       <div style={{ maxWidth: '600px', margin: '7rem auto', padding: '2rem', background: '#fff', borderRadius: '12px', boxShadow: '0 2px 12px rgba(0,0,0,0.08)' }}>
-        <div style={{ marginBottom: '1.5rem' }}>
-          <span role="img" aria-label="product" style={{ fontSize: '4rem', color: '#adb5bd' }}>📦</span>
+        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+          {product.image ? (
+            <img
+              src={product.image.startsWith('/uploads/') ? backendUrl + product.image : product.image}
+              alt={product.name}
+              style={{ width: '250px', height: '250px', objectFit: 'contain', borderRadius: '12px', background: 'white' }}
+            />
+          ) : (
+            <span role="img" aria-label="product" style={{ fontSize: '4rem', color: '#adb5bd' }}>📦</span>
+          )}
         </div>
         <h2 style={{ fontWeight: 700, marginBottom: '1rem' }}>{product.name}</h2>
         <div style={{ marginBottom: '1rem', fontSize: '1.1rem' }}><b>Description:</b> {product.description}</div>

@@ -11,6 +11,7 @@ function AllProducts() {
   const [wishlistProductIds, setWishlistProductIds] = useState([]);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
+  const backendUrl = "http://localhost:5000";
 
   useEffect(() => {
     fetch('http://localhost:5000/api/product')
@@ -211,11 +212,10 @@ function AllProducts() {
                     cursor: 'pointer',
                   }}
                 >
-                  {/* Placeholder for product image */}
                   <div style={{
                     width: '120px',
                     height: '120px',
-                    background: '#e9ecef',
+                    background: 'white',
                     borderRadius: '8px',
                     marginBottom: '1rem',
                     display: 'flex',
@@ -224,7 +224,15 @@ function AllProducts() {
                     fontSize: '2.5rem',
                     color: '#adb5bd',
                   }}>
-                    <span role="img" aria-label="product">📦</span>
+                    {product.image ? (
+                      <img
+                        src={product.image.startsWith('/uploads/') ? backendUrl + product.image : product.image}
+                        alt={product.name}
+                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                      />
+                    ) : (
+                      <span role="img" aria-label="product">📦</span>
+                    )}
                   </div>
                   <div style={{ fontWeight: 600, fontSize: '1.1rem', marginBottom: '0.5rem', textAlign: 'center' }}>{product.name}</div>
                   <div style={{ color: '#6c757d', fontSize: '0.95rem', marginBottom: '0.5rem', textAlign: 'center', minHeight: '40px' }}>{

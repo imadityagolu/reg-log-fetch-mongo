@@ -19,6 +19,7 @@ import PlaceOrder from './components/users/PlaceOrder';
 import Cart from './components/users/Cart';
 import Wishlist from './components/users/Wishlist';
 import ProductDetails from './components/allproducts/ProductDetails';
+import ForgotPassword from './components/users/ForgotPassword';
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
             <Wishlist />
           </UserProtectedRoute>
         } />
+        <Route path="/user/forgot-password" element={<ForgotPassword />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>

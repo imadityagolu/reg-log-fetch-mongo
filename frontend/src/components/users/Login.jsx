@@ -68,6 +68,11 @@ function UserLogin() {
       <p style={{ marginTop: '1rem' }}>
         Don't have an account? <Link to="/user/register" style={{ color: '#007bff' }}>Register here</Link>
       </p>
+      <div style={{ marginTop: '1rem', textAlign: 'center' }}>
+        <a href="/user/forgot-password" style={{ color: '#007bff', textDecoration: 'underline', cursor: 'pointer' }}>
+          Forgot Password?
+        </a>
+      </div>
       <Link to="/client/register" style={{ color: '#6c757d', textDecoration: 'none', display: 'block', marginTop: '1rem' }}>
         want to sell ? Become client
       </Link>

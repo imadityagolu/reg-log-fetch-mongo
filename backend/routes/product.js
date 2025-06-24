@@ -2,9 +2,23 @@ const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const path = require('path');
+
+// Multer setup
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, '../../uploads'));
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + '-' + file.originalname);
+  }
+});
+const upload = multer({ storage });
 
 // Add product
-router.post('/', async (req, res) => {
+router.post('/', upload.single('image'), async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader) return res.status(401).json({ message: 'No token' });
@@ -12,7 +26,11 @@ router.post('/', async (req, res) => {
     const payload = jwt.verify(token, process.env.JWT_SECRET || 'secret');
     const { name, description, price, category } = req.body;
     if (!name || !description || !price || !category) return res.status(400).json({ message: 'All fields required' });
-    const product = new Product({ name, description, price, category, client: payload.id });
+    let image = '';
+    if (req.file) {
+      image = '/uploads/' + req.file.filename;
+    }
+    const product = new Product({ name, description, price, category, image, client: payload.id });
     await product.save();
     res.status(201).json({ message: 'Product added', product });
   } catch (err) {

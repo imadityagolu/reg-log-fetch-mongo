@@ -20,6 +20,7 @@ function ClientDashboard() {
   const [editDescription, setEditDescription] = useState('');
   const [editError, setEditError] = useState('');
   const [editSuccess, setEditSuccess] = useState('');
+  const backendUrl = "http://localhost:5000";
 
   useEffect(() => {
     // Get client name from token
@@ -133,6 +134,7 @@ function ClientDashboard() {
         <table style={{ width: '100%', marginTop: '1rem', borderCollapse: 'collapse' }}>
           <thead>
             <tr>
+              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Image</th>
               <th style={{ border: '1px solid #ccc', padding: '8px' }}>Name</th>
               <th style={{ border: '1px solid #ccc', padding: '8px' }}>Description</th>
               <th style={{ border: '1px solid #ccc', padding: '8px' }}>Category</th>
@@ -144,6 +146,19 @@ function ClientDashboard() {
           <tbody>
             {products.map(product => (
               <tr key={product._id}>
+                <td style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'center' }}>
+                  <div style={{ width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: '6px', background: 'white' }}>
+                    {product.image ? (
+                      <img
+                        src={product.image.startsWith('/uploads/') ? backendUrl + product.image : product.image}
+                        alt={product.name}
+                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                      />
+                    ) : (
+                      <span role="img" aria-label="product" style={{ fontSize: '2rem', color: '#adb5bd' }}>📦</span>
+                    )}
+                  </div>
+                </td>
                 <td style={{ border: '1px solid #ccc', padding: '8px' }}>{product.name}</td>
                 <td style={{ border: '1px solid #ccc', padding: '8px' }}>
                   {editId === product._id ? (
