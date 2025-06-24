@@ -74,6 +74,10 @@ function UserDashboard() {
     navigate('/user/cart');
   };
 
+  const handleGoToWishlist = () => {
+    navigate('/user/wishlist');
+  };
+
   if (loading) return <div>Loading...</div>;
 
   return (
@@ -149,9 +153,14 @@ function UserDashboard() {
       </div>
 
       <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '8px', boxShadow: '0 0 10px rgba(0,0,0,0.1)' }}>
-        <button onClick={handleGoToCart} style={{ marginBottom: '1rem', padding: '0.5em 1.2em', background: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 600 }}>
-          My Cart
-        </button>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <button onClick={handleGoToCart} style={{ marginBottom: '1rem', padding: '0.5em 1.2em', background: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 600 }}>
+            My Cart
+          </button>
+          <button onClick={handleGoToWishlist} style={{ marginBottom: '1rem', padding: '0.5em 1.2em', background: '#ffc107', color: '#212529', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 600 }}>
+            My Wishlist
+          </button>
+        </div>
       </div>
     </div>
   );

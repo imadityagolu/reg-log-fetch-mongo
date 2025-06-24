@@ -7,8 +7,9 @@ function EditClient() {
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
-  const [form, setForm] = useState({ name: '', email: '', dob: '', address: '' });
+  const [form, setForm] = useState({ name: '', email: '', mobile: '', dob: '', address: '' });
   const [error, setError] = useState('');
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     fetch(`http://localhost:5000/api/client/${id}`)
@@ -18,10 +19,19 @@ function EditClient() {
         setForm({
           name: data.name,
           email: data.email,
+          mobile: data.mobile,
           dob: data.dob ? data.dob.slice(0, 10) : '',
           address: data.address || '',
         });
         setLoading(false);
+      });
+    // Fetch products by this client
+    fetch('http://localhost:5000/api/product')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setProducts(data.filter(p => p.client && (p.client._id === id || p.client === id)));
+        }
       });
   }, [id]);
 
@@ -60,6 +70,21 @@ function EditClient() {
     }
   };
 
+  const deleteProduct = async (productId) => {
+    if (!window.confirm('Are you sure you want to delete this product?')) return;
+    try {
+      // No auth required for admin in this context
+      const res = await fetch(`http://localhost:5000/api/product/${productId}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Delete failed');
+      setProducts(products.filter(p => p._id !== productId));
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
   if (loading) return <div>Loading...</div>;
   if (!client) return <div>Client not found</div>;
 
@@ -93,6 +118,19 @@ function EditClient() {
                     readOnly
                     disabled
                     placeholder="Email"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <th style={{ textAlign: 'left', padding: '8px', border: '1px solid #ccc' }}>Mobile</th>
+                <td style={{ padding: '8px', border: '1px solid #ccc' }}>
+                  <input
+                    type="text"
+                    name="mobile"
+                    value={form.mobile}
+                    onChange={handleChange}
+                    required
+                    placeholder="Mobile"
                   />
                 </td>
               </tr>
@@ -142,6 +180,10 @@ function EditClient() {
                 <td style={{ padding: '8px', border: '1px solid #ccc' }}>{client.email}</td>
               </tr>
               <tr>
+                <th style={{ textAlign: 'left', padding: '8px', border: '1px solid #ccc' }}>Mobile</th>
+                <td style={{ padding: '8px', border: '1px solid #ccc' }}>{client.mobile}</td>
+              </tr>
+              <tr>
                 <th style={{ textAlign: 'left', padding: '8px', border: '1px solid #ccc' }}>Date of Birth</th>
                 <td style={{ padding: '8px', border: '1px solid #ccc' }}>{client.dob ? client.dob.slice(0, 10) : ''}</td>
               </tr>
@@ -161,6 +203,37 @@ function EditClient() {
       <button onClick={() => navigate('/dashboard')} style={{ marginTop: '1em' }}>
         Back to Dashboard
       </button>
+      <h3 style={{ marginTop: '2em' }}>Products Added by this Client</h3>
+      {products.length === 0 ? (
+        <div>No products added by this client.</div>
+      ) : (
+        <table style={{ width: '100%', marginTop: '1rem', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr>
+              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Name</th>
+              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Description</th>
+              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Category</th>
+              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Price</th>
+              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Created At</th>
+              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {products.map(product => (
+              <tr key={product._id}>
+                <td style={{ border: '1px solid #ccc', padding: '8px' }}>{product.name}</td>
+                <td style={{ border: '1px solid #ccc', padding: '8px' }}>{product.description}</td>
+                <td style={{ border: '1px solid #ccc', padding: '8px' }}>{product.category}</td>
+                <td style={{ border: '1px solid #ccc', padding: '8px' }}>{product.price}</td>
+                <td style={{ border: '1px solid #ccc', padding: '8px' }}>{product.createdAt ? product.createdAt.slice(0, 10) : ''}</td>
+                <td style={{ border: '1px solid #ccc', padding: '8px' }}>
+                  <button onClick={() => deleteProduct(product._id)} style={{ color: 'red' }}>Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }

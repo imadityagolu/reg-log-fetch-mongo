@@ -12,6 +12,7 @@ function parseJwt(token) {
 function ClientDashboard() {
   const navigate = useNavigate();
   const [clientName, setClientName] = useState('');
+  const [clientDetails, setClientDetails] = useState(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editId, setEditId] = useState(null);
@@ -27,7 +28,10 @@ function ClientDashboard() {
     if (payload && payload.id) {
       fetch(`http://localhost:5000/api/client/${payload.id}`)
         .then(res => res.json())
-        .then(data => setClientName(data.name || ''));
+        .then(data => {
+          setClientName(data.name || '');
+          setClientDetails(data);
+        });
     }
     // Fetch products for this client
     if (token) {
@@ -109,6 +113,16 @@ function ClientDashboard() {
       <h2>Welcome, {clientName ? clientName : 'Client'}!</h2>
       <button onClick={handleLogout}>Logout</button>
       <br /><br />
+      {clientDetails && (
+        <div style={{ background: '#f7f7f7', padding: '1.5rem', borderRadius: '8px', marginBottom: '2rem', maxWidth: '500px' }}>
+          <div><b>Email:</b> {clientDetails.email}</div>
+          <div><b>Mobile:</b> {clientDetails.mobile}</div>
+          <div><b>Date of Birth:</b> {clientDetails.dob ? clientDetails.dob.slice(0, 10) : '-'}</div>
+          <div><b>Address:</b> {clientDetails.address}</div>
+          <div><b>Account Created:</b> {clientDetails.createdAt ? clientDetails.createdAt.slice(0, 10) : '-'}</div>
+          <div><b>Last Login:</b> {clientDetails.lastLogin ? clientDetails.lastLogin.slice(0, 19).replace('T', ' ') : '-'}</div>
+        </div>
+      )}
       <button onClick={() => navigate('/client/addproduct')}>Add Product</button>
       <h3 style={{ marginTop: '2rem' }}>Your Products</h3>
       {loading ? (

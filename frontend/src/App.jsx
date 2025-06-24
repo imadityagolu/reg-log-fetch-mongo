@@ -17,6 +17,8 @@ import UserDashboard from './components/users/Dashboard';
 import UserProtectedRoute from './components/users/ProtectedRoute';
 import PlaceOrder from './components/users/PlaceOrder';
 import Cart from './components/users/Cart';
+import Wishlist from './components/users/Wishlist';
+import ProductDetails from './components/allproducts/ProductDetails';
 
 function App() {
   return (
@@ -56,6 +58,12 @@ function App() {
         } />
         <Route path="/user/placeorder" element={<PlaceOrder />} />
         <Route path="/user/cart" element={<Cart />} />
+        <Route path="/user/wishlist" element={
+          <UserProtectedRoute>
+            <Wishlist />
+          </UserProtectedRoute>
+        } />
+        <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
