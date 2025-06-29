@@ -12,7 +12,7 @@ app.use(express.json());
 // CORS configuration for production
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? [process.env.FRONTEND_URL || 'https://your-frontend-app.onrender.com'] // Use environment variable
+    ? [process.env.FRONTEND_URL || 'https://reg-log-fetch-mongo-1.onrender.com'] // Use environment variable
     : ['http://localhost:3000', 'http://localhost:5173'],
   credentials: true,
   optionsSuccessStatus: 200
