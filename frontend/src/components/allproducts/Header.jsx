@@ -22,7 +22,7 @@ function Header() {
     <header style={{ position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 1000, background: '#fff', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem 0', borderBottom: '1px solid #eee', marginBottom: 0, overflowX: 'auto' }}>
       <div style={{ width: '100%', maxWidth: '1400px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 3rem' }}>
         <div style={{ fontWeight: 'bold', fontSize: '1.5rem' }}>
-          E-Comm
+          <Link to="/">E-Comm</Link>
         </div>
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
           {loggedIn ? (
