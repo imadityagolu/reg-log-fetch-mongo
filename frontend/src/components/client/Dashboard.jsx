@@ -20,14 +20,14 @@ function ClientDashboard() {
   const [editDescription, setEditDescription] = useState('');
   const [editError, setEditError] = useState('');
   const [editSuccess, setEditSuccess] = useState('');
-  const backendUrl = "http://localhost:5000";
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     // Get client name from token
     const token = localStorage.getItem('client_token');
     const payload = token ? parseJwt(token) : null;
     if (payload && payload.id) {
-      fetch(`http://localhost:5000/api/client/${payload.id}`)
+      fetch(`${backendUrl}/api/client/${payload.id}`)
         .then(res => res.json())
         .then(data => {
           setClientName(data.name || '');
@@ -36,7 +36,7 @@ function ClientDashboard() {
     }
     // Fetch products for this client
     if (token) {
-      fetch('http://localhost:5000/api/product/my', {
+      fetch(`${backendUrl}/api/product/my`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then(res => res.json())
@@ -51,7 +51,7 @@ function ClientDashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem('client_token');
-    navigate('/client/login');
+    navigate('/');
   };
 
   const startEdit = (product) => {
@@ -75,7 +75,7 @@ function ClientDashboard() {
     setEditSuccess('');
     try {
       const token = localStorage.getItem('client_token');
-      const res = await fetch(`http://localhost:5000/api/product/${id}`, {
+      const res = await fetch(`${backendUrl}/api/product/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ function ClientDashboard() {
     if (!window.confirm('Are you sure you want to delete this product?')) return;
     try {
       const token = localStorage.getItem('client_token');
-      const res = await fetch(`http://localhost:5000/api/product/${id}`, {
+      const res = await fetch(`${backendUrl}/api/product/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });

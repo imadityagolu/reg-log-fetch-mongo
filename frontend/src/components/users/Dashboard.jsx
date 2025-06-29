@@ -20,12 +20,13 @@ function UserDashboard() {
   const [userMobile, setUserMobile] = useState('');
   const [userAddress, setUserAddress] = useState('');
   const [editAddress, setEditAddress] = useState('');
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const token = localStorage.getItem('user_token');
     const payload = token ? parseJwt(token) : null;
     if (payload && payload.id) {
-      fetch(`http://localhost:5000/api/user/validate`, {
+      fetch(`${backendUrl}/api/user/validate`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -40,7 +41,7 @@ function UserDashboard() {
         })
         .catch(() => {});
       // Fetch cart from backend
-      fetch('http://localhost:5000/api/user/cart', {
+      fetch(`${backendUrl}/api/user/cart`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then(res => res.json())
@@ -67,7 +68,7 @@ function UserDashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem('user_token');
-    navigate('/user/login');
+    navigate('/');
   };
 
   const handleGoToCart = () => {
@@ -120,7 +121,7 @@ function UserDashboard() {
                   const token = localStorage.getItem('user_token');
                   setProfileMessage('');
                   try {
-                    const res = await fetch('http://localhost:5000/api/user/profile', {
+                    const res = await fetch(`${backendUrl}/api/user/profile`, {
                       method: 'PUT',
                       headers: {
                         'Content-Type': 'application/json',
@@ -166,4 +167,4 @@ function UserDashboard() {
   );
 }
 
-export default UserDashboard; 
+export default UserDashboard;

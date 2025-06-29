@@ -12,11 +12,11 @@ function ProductDetails() {
   const [wishlistProductIds, setWishlistProductIds] = useState([]);
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
-  const backendUrl = "http://localhost:5000";
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:5000/api/product`)
+    fetch(`${backendUrl}/api/product`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) {
@@ -39,7 +39,7 @@ function ProductDetails() {
     const token = localStorage.getItem('user_token');
     setUserLoggedIn(!!token);
     if (token) {
-      fetch('http://localhost:5000/api/user/cart', {
+      fetch(`${backendUrl}/api/user/cart`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then(res => res.json())
@@ -48,7 +48,7 @@ function ProductDetails() {
             setCartProductIds(data.map(item => item.product?._id).filter(Boolean));
           }
         });
-      fetch('http://localhost:5000/api/user/wishlist', {
+      fetch(`${backendUrl}/api/user/wishlist`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then(res => res.json())
@@ -64,7 +64,7 @@ function ProductDetails() {
     const token = localStorage.getItem('user_token');
     setMessage('');
     try {
-      const res = await fetch('http://localhost:5000/api/user/cart', {
+      const res = await fetch(`${backendUrl}/api/user/cart`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ function ProductDetails() {
     const token = localStorage.getItem('user_token');
     setMessage('');
     try {
-      const res = await fetch('http://localhost:5000/api/user/wishlist', {
+      const res = await fetch(`${backendUrl}/api/user/wishlist`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -118,7 +118,7 @@ function ProductDetails() {
     const token = localStorage.getItem('user_token');
     setMessage('');
     try {
-      const res = await fetch('http://localhost:5000/api/user/wishlist', {
+      const res = await fetch(`${backendUrl}/api/user/wishlist`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

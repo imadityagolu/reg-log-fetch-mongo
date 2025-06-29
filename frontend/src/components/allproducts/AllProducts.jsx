@@ -11,10 +11,10 @@ function AllProducts() {
   const [wishlistProductIds, setWishlistProductIds] = useState([]);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
-  const backendUrl = "http://localhost:5000";
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/product')
+    fetch(`${backendUrl}/api/product`)
       .then(res => res.json())
       .then(data => {
         setProducts(data);
@@ -27,7 +27,7 @@ function AllProducts() {
   const fetchCartProductIds = () => {
     const token = localStorage.getItem('user_token');
     if (!token) return;
-    fetch('http://localhost:5000/api/user/cart', {
+    fetch(`${backendUrl}/api/user/cart`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())
@@ -42,7 +42,7 @@ function AllProducts() {
   const fetchWishlistProductIds = () => {
     const token = localStorage.getItem('user_token');
     if (!token) return;
-    fetch('http://localhost:5000/api/user/wishlist', {
+    fetch(`${backendUrl}/api/user/wishlist`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())
@@ -80,7 +80,7 @@ function AllProducts() {
     const token = localStorage.getItem('user_token');
     setMessage('');
     try {
-      const res = await fetch('http://localhost:5000/api/user/cart', {
+      const res = await fetch(`${backendUrl}/api/user/cart`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -107,7 +107,7 @@ function AllProducts() {
     const token = localStorage.getItem('user_token');
     setMessage('');
     try {
-      const res = await fetch('http://localhost:5000/api/user/wishlist', {
+      const res = await fetch(`${backendUrl}/api/user/wishlist`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -134,7 +134,7 @@ function AllProducts() {
     const token = localStorage.getItem('user_token');
     setMessage('');
     try {
-      const res = await fetch('http://localhost:5000/api/user/wishlist', {
+      const res = await fetch(`${backendUrl}/api/user/wishlist`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -198,7 +198,6 @@ function AllProducts() {
               return (
                 <div
                   key={product._id}
-                  onClick={() => navigate(`/product/${product._id}`)}
                   style={{
                     background: '#fff',
                     borderRadius: '12px',
@@ -209,21 +208,24 @@ function AllProducts() {
                     alignItems: 'center',
                     transition: 'box-shadow 0.2s',
                     position: 'relative',
-                    cursor: 'pointer',
                   }}
                 >
-                  <div style={{
-                    width: '120px',
-                    height: '120px',
-                    background: 'white',
-                    borderRadius: '8px',
-                    marginBottom: '1rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '2.5rem',
-                    color: '#adb5bd',
-                  }}>
+                  <div 
+                    onClick={() => navigate(`/product/${product._id}`)}
+                    style={{
+                      width: '120px',
+                      height: '120px',
+                      background: 'white',
+                      borderRadius: '8px',
+                      marginBottom: '1rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '2.5rem',
+                      color: '#adb5bd',
+                      cursor: 'pointer',
+                    }}
+                  >
                     {product.image ? (
                       <img
                         src={product.image.startsWith('/uploads/') ? backendUrl + product.image : product.image}
@@ -234,35 +236,82 @@ function AllProducts() {
                       <span role="img" aria-label="product">📦</span>
                     )}
                   </div>
-                  <div style={{ fontWeight: 600, fontSize: '1.1rem', marginBottom: '0.5rem', textAlign: 'center' }}>{product.name}</div>
-                  <div style={{ color: '#6c757d', fontSize: '0.95rem', marginBottom: '0.5rem', textAlign: 'center', minHeight: '40px' }}>{
-                    (() => {
+                  <div 
+                    onClick={() => navigate(`/product/${product._id}`)}
+                    style={{ 
+                      fontWeight: 600, 
+                      fontSize: '1.1rem', 
+                      marginBottom: '0.5rem', 
+                      textAlign: 'center',
+                      cursor: 'pointer',
+                      color: '#007bff',
+                      textDecoration: 'underline'
+                    }}
+                  >
+                    {product.name}
+                  </div>
+                  <div 
+                    onClick={() => navigate(`/product/${product._id}`)}
+                    style={{ 
+                      color: '#6c757d', 
+                      fontSize: '0.95rem', 
+                      marginBottom: '0.5rem', 
+                      textAlign: 'center', 
+                      minHeight: '40px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {(() => {
                       if (!product.description) return '';
                       const words = product.description.split(' ');
                       if (words.length <= 10) return product.description;
                       return words.slice(0, 10).join(' ') + '...';
-                    })()
-                  }</div>
-                  <div style={{ color: '#495057', fontSize: '0.95rem', marginBottom: '0.5rem' }}><b>Category:</b> {product.category}</div>
+                    })()}
+                  </div>
+                  <div 
+                    onClick={() => navigate(`/product/${product._id}`)}
+                    style={{ 
+                      color: '#495057', 
+                      fontSize: '0.95rem', 
+                      marginBottom: '0.5rem',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <b>Category:</b> {product.category}
+                  </div>
                   <div style={{ color: '#007bff', fontWeight: 700, fontSize: '1.1rem', marginBottom: '1rem' }}>₹{product.price}</div>
+                  
                   {userLoggedIn && (
                     <div style={{ display: 'flex', gap: '0.5em', marginBottom: '0.5em' }}>
                       <button
-                        onClick={() => inCart ? navigate('/user/cart') : handleAddToCart(product)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (inCart) {
+                            navigate('/user/cart');
+                          } else {
+                            handleAddToCart(product);
+                          }
+                        }}
                         style={{ padding: '0.7em 1.5em', background: inCart ? '#6c757d' : '#007bff', color: '#fff', border: 'none', borderRadius: '6px', cursor: inCart ? 'pointer' : 'pointer', fontWeight: 600, fontSize: '1rem', boxShadow: inCart ? 'none' : '0 2px 8px rgba(0,123,255,0.08)', transition: 'background 0.2s' }}
                       >
                         {inCart ? 'In Cart' : 'Add to Cart'}
                       </button>
                       {inWishlist ? (
                         <button
-                          onClick={() => handleRemoveFromWishlist(product)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRemoveFromWishlist(product);
+                          }}
                           style={{ padding: '0.7em 1.2em', background: '#dc3545', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 600, fontSize: '1rem', boxShadow: '0 2px 8px rgba(220,53,69,0.08)', transition: 'background 0.2s' }}
                         >
                           Remove from Wishlist
                         </button>
                       ) : (
                         <button
-                          onClick={() => handleAddToWishlist(product)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddToWishlist(product);
+                          }}
                           style={{ padding: '0.7em 1.2em', background: '#ffc107', color: '#212529', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 600, fontSize: '1rem', boxShadow: '0 2px 8px rgba(255,193,7,0.08)', transition: 'background 0.2s' }}
                         >
                           Add to Wishlist

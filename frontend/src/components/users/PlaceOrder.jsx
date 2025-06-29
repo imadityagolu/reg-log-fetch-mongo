@@ -16,6 +16,7 @@ function PlaceOrder() {
   const navigate = useNavigate();
   const products = location.state?.products || [];
   const total = products.reduce((sum, p) => sum + (p.price || 0), 0);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     loadRazorpayScript('https://checkout.razorpay.com/v1/checkout.js');
@@ -37,7 +38,7 @@ function PlaceOrder() {
         // Save order in DB
         try {
           const token = localStorage.getItem('user_token');
-          const orderRes = await fetch('http://localhost:5000/api/user/order', {
+          const orderRes = await fetch(`${backendUrl}/api/user/order`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -116,4 +117,4 @@ function PlaceOrder() {
   );
 }
 
-export default PlaceOrder; 
+export default PlaceOrder;

@@ -66,7 +66,7 @@ function App() {
         } />
         <Route path="/user/forgot-password" element={<ForgotPassword />} />
         <Route path="/product/:id" element={<ProductDetails />} />
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );

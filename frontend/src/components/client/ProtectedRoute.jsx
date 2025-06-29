@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 
 function ClientProtectedRoute({ children }) {
   const [isValid, setIsValid] = useState(null);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const token = localStorage.getItem('client_token');
@@ -10,7 +11,7 @@ function ClientProtectedRoute({ children }) {
       setIsValid(false);
       return;
     }
-    fetch('http://localhost:5000/api/client/validate', {
+    fetch(`${backendUrl}/api/client/validate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     })

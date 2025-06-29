@@ -10,9 +10,10 @@ function EditClient() {
   const [form, setForm] = useState({ name: '', email: '', mobile: '', dob: '', address: '' });
   const [error, setError] = useState('');
   const [products, setProducts] = useState([]);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/client/${id}`)
+    fetch(`${backendUrl}/api/client/${id}`)
       .then(res => res.json())
       .then(data => {
         setClient(data);
@@ -26,7 +27,7 @@ function EditClient() {
         setLoading(false);
       });
     // Fetch products by this client
-    fetch('http://localhost:5000/api/product')
+    fetch(`${backendUrl}/api/product`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) {
@@ -43,7 +44,7 @@ function EditClient() {
     e.preventDefault();
     setError('');
     try {
-      const res = await fetch(`http://localhost:5000/api/client/${id}`, {
+      const res = await fetch(`${backendUrl}/api/client/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -60,7 +61,7 @@ function EditClient() {
   const handleDelete = async () => {
     if (!window.confirm('Are you sure you want to delete this client?')) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/client/${id}`, {
+      const res = await fetch(`${backendUrl}/api/client/${id}`, {
         method: 'DELETE',
       });
       if (!res.ok) throw new Error('Delete failed');
@@ -74,7 +75,7 @@ function EditClient() {
     if (!window.confirm('Are you sure you want to delete this product?')) return;
     try {
       // No auth required for admin in this context
-      const res = await fetch(`http://localhost:5000/api/product/${productId}`, {
+      const res = await fetch(`${backendUrl}/api/product/${productId}`, {
         method: 'DELETE',
       });
       const data = await res.json();

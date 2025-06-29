@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 
 function AdmitProtectedRoute({ children }) {
   const [isValid, setIsValid] = useState(null);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -10,7 +11,7 @@ function AdmitProtectedRoute({ children }) {
       setIsValid(false);
       return;
     }
-    fetch('http://localhost:5000/api/admit/validate', {
+    fetch(`${backendUrl}/api/admit/validate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     })

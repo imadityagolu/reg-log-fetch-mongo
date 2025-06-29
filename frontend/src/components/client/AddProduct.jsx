@@ -11,6 +11,7 @@ function AddProduct() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,7 +27,7 @@ function AddProduct() {
       if (imageFile) {
         formData.append('image', imageFile);
       }
-      const res = await fetch('http://localhost:5000/api/product', {
+      const res = await fetch(`${backendUrl}/api/product`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

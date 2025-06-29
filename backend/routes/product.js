@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
+const Cart = require('../models/Cart');
+const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
@@ -8,7 +10,7 @@ const path = require('path');
 // Multer setup
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, '../../uploads'));
+    cb(null, path.join(__dirname, '../../frontend/public/uploads'));
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -80,6 +82,16 @@ router.delete('/:id', async (req, res) => {
     const payload = jwt.verify(token, process.env.JWT_SECRET || 'secret');
     const product = await Product.findOneAndDelete({ _id: req.params.id, client: payload.id });
     if (!product) return res.status(404).json({ message: 'Product not found or not yours' });
+    
+    // Clean up cart items for this product
+    await Cart.deleteMany({ product: req.params.id });
+    
+    // Clean up wishlist items for this product
+    await User.updateMany(
+      { wishlist: req.params.id },
+      { $pull: { wishlist: req.params.id } }
+    );
+    
     res.json({ message: 'Product deleted' });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });

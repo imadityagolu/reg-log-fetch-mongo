@@ -7,6 +7,7 @@ function Wishlist() {
   const [message, setMessage] = useState('');
   const [cartProductIds, setCartProductIds] = useState([]);
   const navigate = useNavigate();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const fetchWishlist = () => {
     const token = localStorage.getItem('user_token');
@@ -14,7 +15,7 @@ function Wishlist() {
       setLoading(false);
       return;
     }
-    fetch('http://localhost:5000/api/user/wishlist', {
+    fetch(`${backendUrl}/api/user/wishlist`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())
@@ -30,7 +31,7 @@ function Wishlist() {
     // Fetch cart product IDs
     const token = localStorage.getItem('user_token');
     if (token) {
-      fetch('http://localhost:5000/api/user/cart', {
+      fetch(`${backendUrl}/api/user/cart`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then(res => res.json())
@@ -47,7 +48,7 @@ function Wishlist() {
     const token = localStorage.getItem('user_token');
     setMessage('');
     try {
-      const res = await fetch('http://localhost:5000/api/user/wishlist', {
+      const res = await fetch(`${backendUrl}/api/user/wishlist`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -74,7 +75,7 @@ function Wishlist() {
     const token = localStorage.getItem('user_token');
     setMessage('');
     try {
-      const res = await fetch('http://localhost:5000/api/user/cart', {
+      const res = await fetch(`${backendUrl}/api/user/cart`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

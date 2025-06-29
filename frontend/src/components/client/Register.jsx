@@ -11,13 +11,14 @@ function ClientRegister() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
     try {
-      const res = await fetch('http://localhost:5000/api/client/register', {
+      const res = await fetch(`${backendUrl}/api/client/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password, dob, address, mobile }),

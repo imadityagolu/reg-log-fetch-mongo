@@ -15,20 +15,21 @@ function AdmitDashboard() {
   const [loading, setLoading] = useState(true);
   const [adminName, setAdminName] = useState('');
   const [adminDetails, setAdminDetails] = useState(null);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     // Get admin name from token
     const token = localStorage.getItem('token');
     const payload = token ? parseJwt(token) : null;
     if (payload && payload.id) {
-      fetch(`http://localhost:5000/api/admit/${payload.id}`)
+      fetch(`${backendUrl}/api/admit/${payload.id}`)
         .then(res => res.json())
         .then(data => {
           setAdminName(data.name || '');
           setAdminDetails(data);
         });
     }
-    fetch('http://localhost:5000/api/client')
+    fetch(`${backendUrl}/api/client`)
       .then(res => res.json())
       .then(data => {
         setClients(data);
@@ -38,14 +39,14 @@ function AdmitDashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/login');
+    navigate('/');
   };
 
   const deleteClient = async (id) => {
     if (!window.confirm('Are you sure you want to delete this client?')) return;
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`http://localhost:5000/api/client/${id}`, {
+      const res = await fetch(`${backendUrl}/api/client/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });

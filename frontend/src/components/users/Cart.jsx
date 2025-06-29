@@ -6,38 +6,37 @@ function Cart() {
   const [cart, setCart] = useState([]);
   const [cartMessage, setCartMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const token = localStorage.getItem('user_token');
     if (!token) {
-      setLoading(false);
+      navigate('/user/login');
       return;
     }
-    fetch('http://localhost:5000/api/user/cart', {
+    fetch(`${backendUrl}/api/user/cart`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())
       .then(data => {
-        if (!Array.isArray(data)) {
+        if (Array.isArray(data)) {
+          const validCartItems = data.filter(item => item.product && item.product._id);
+          setCart(validCartItems);
+        } else {
           setCart([]);
-          setCartMessage('Cart API did not return an array.');
-          setLoading(false);
-          return;
         }
-        const filtered = data.filter(item => item.product && item.product.name);
-        setCart(filtered);
         setLoading(false);
       })
       .catch(() => {
-        setCartMessage('Failed to fetch cart.');
+        setCart([]);
         setLoading(false);
       });
-  }, []);
+  }, [navigate]);
 
   const handleRemoveFromCart = async (productId) => {
     const token = localStorage.getItem('user_token');
     try {
-      const res = await fetch('http://localhost:5000/api/user/cart', {
+      const res = await fetch(`${backendUrl}/api/user/cart`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -112,4 +111,4 @@ function Cart() {
   );
 }
 
-export default Cart; 
+export default Cart;

@@ -8,7 +8,16 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+
+// CORS configuration for production
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? [process.env.FRONTEND_URL || 'https://your-frontend-app.onrender.com'] // Use environment variable
+    : ['http://localhost:3000', 'http://localhost:5173'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 
 // Import routes
 const admitRoutes = require('./routes/admit');
@@ -20,7 +29,13 @@ app.use('/api/client', clientRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/user', userRoutes);
 
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, '../frontend/public/uploads')));
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'OK', message: 'Server is running' });
+});
 
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI || `mongodb+srv://adityasng420ak:aditya12345@cluster0.fgxyhi8.mongodb.net/test`;

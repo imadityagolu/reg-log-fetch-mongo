@@ -9,13 +9,14 @@ function Register() {
   const [success, setSuccess] = useState('');
   const [mobile, setMobile] = useState('');
   const navigate = useNavigate();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
     try {
-      const res = await fetch('http://localhost:5000/api/admit/register', {
+      const res = await fetch(`${backendUrl}/api/admit/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password, mobile }),
